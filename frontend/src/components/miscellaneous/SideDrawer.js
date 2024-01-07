@@ -125,25 +125,27 @@ function SideDrawer() {
 
   return (
     <>
-      <Box
+      <Box 
         d="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg="white"
+        bg="black"
+        color="white"
         w="100%"
         p="5px 10px 5px 10px"
         borderWidth="5px"
+        
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost" onClick={onOpen}>
+          <Button variant="ghost" onClick={onOpen} _hover={{bg:"gray.700"}} _focus="none">
             <i className="fas fa-search"></i>
             <Text d={{ base: "none", md: "flex" }} px={4}>
               Search User
             </Text>
           </Button>
         </Tooltip>
-        <Text fontSize="2xl" fontFamily="Work sans">
-          Talk-A-Tive
+        <Text fontSize="2xl" fontFamily="cursive">
+          Chat-Buds
         </Text>
         <div>
           <Menu>
@@ -157,7 +159,7 @@ function SideDrawer() {
             <MenuList pl={2}>
               {!notification.length && "No New Messages"}
               {notification.map((notif) => (
-                <MenuItem
+                <MenuItem 
                   key={notif._id}
                   onClick={() => {
                     setSelectedChat(notif.chat);
@@ -171,21 +173,22 @@ function SideDrawer() {
               ))}
             </MenuList>
           </Menu>
-          <Menu>
-            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
+          <Menu >
+            <MenuButton as={Button} bg="gray.600" _hover={{bg:"gray.500"}} rightIcon={<ChevronDownIcon />}>
               <Avatar
                 size="sm"
                 cursor="pointer"
                 name={user.name}
                 src={user.pic}
+                color="black"
               />
             </MenuButton>
-            <MenuList>
-              <ProfileModal user={user}>
-                <MenuItem>My Profile</MenuItem>{" "}
+            <MenuList bg="gray.700">
+              <ProfileModal user={user}  >
+                <MenuItem _hover={{bg:"gray.400"}} >My Profile</MenuItem>{" "}
               </ProfileModal>
               <MenuDivider />
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+              <MenuItem _hover={{bg:"gray.400"}} onClick={logoutHandler}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </div>
@@ -193,12 +196,13 @@ function SideDrawer() {
 
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
-          <DrawerBody>
+        <DrawerContent >
+          <DrawerHeader borderBottomWidth="1px" bg="gray.800"  color="white">Search Users</DrawerHeader>
+          <DrawerBody  className="drawerBody">
             <Box d="flex" pb={2}>
               <Input
                 placeholder="Search by name or email"
+                color="whiteAlpha.700"
                 mr={2}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

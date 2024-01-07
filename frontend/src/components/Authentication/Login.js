@@ -71,45 +71,54 @@ const Login = () => {
   };
 
   return (
-    <VStack spacing="10px">
-      <FormControl id="email" isRequired>
+    <VStack spacing="10px" color="white" >
+      <FormControl  id="email" isRequired>
         <FormLabel>Email Address</FormLabel>
-        <Input
+        <Input 
           value={email}
           type="email"
           placeholder="Enter Your Email Address"
           onChange={(e) => setEmail(e.target.value)}
+          borderColor="gray.300"
+          focusBorderColor="gray.400"
         />
       </FormControl>
-      <FormControl id="password" isRequired>
+      <FormControl id="password" isRequired >
         <FormLabel>Password</FormLabel>
-        <InputGroup size="md">
+        <InputGroup size="md" >
           <Input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type={show ? "text" : "password"}
             placeholder="Enter password"
+            focusBorderColor="gray.400"
+            
           />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
+          <InputRightElement width="4.5rem" >
+            <Button bg="gray.700" _hover={{bg:"gray.700"}} h="1.75rem" _focus="none" size="sm" onClick={handleClick}>
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
       </FormControl>
       <Button
-        colorScheme="blue"
+        // colorScheme= ""
+        bg={"gray.500"}
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
         isLoading={loading}
+        _focus="none"
+        focusBorderColor="gray.500"
       >
         Login
       </Button>
       <Button
+        
         variant="solid"
         colorScheme="red"
         width="100%"
+        _focus="none"
         onClick={() => {
           setEmail("guest@example.com");
           setPassword("123456");

@@ -200,16 +200,23 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       {selectedChat ? (
         <>
           <Text
+           className="chatHeader"
             fontSize={{ base: "28px", md: "30px" }}
             pb={3}
             px={2}
             w="100%"
+            textColor="white"
+            fontWeight="bold"
+            fontStyle="normal"
+
             fontFamily="Work sans"
             d="flex"
+            
             justifyContent={{ base: "space-between" }}
+            justifyItems="center"
             alignItems="center"
           >
-            <IconButton
+            <IconButton className="iconBut" color="black"
               d={{ base: "flex", md: "none" }}
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
@@ -234,11 +241,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ))}
           </Text>
           <Box
+            className="chatwallpaper"
             d="flex"
             flexDir="column"
             justifyContent="flex-end"
+
             p={3}
-            bg="#E8E8E8"
+            // bg="#E8E8E8"
+            // bg="black "
+            
             w="100%"
             h="100%"
             borderRadius="lg"
@@ -282,8 +293,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 variant="filled"
                 bg="#E0E0E0"
                 placeholder="Enter a message.."
+                color="white"
                 value={newMessage}
                 onChange={typingHandler}
+                focusBorderColor="gray.400  "
               />
               <Icon
               cursor="pointer"
