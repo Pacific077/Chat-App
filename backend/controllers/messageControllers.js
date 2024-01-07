@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Message = require("../models/messageModel");
 const User = require("../models/userModel");
 const Chat = require("../models/chatModel");
+const schedule = require("node-schedule");
 
 //@description     Get all Messages
 //@route           GET /api/Message/:chatId
@@ -17,7 +18,33 @@ const allMessages = asyncHandler(async (req, res) => {
     throw new Error(error.message);
   }
 });
+const handleMessages = async (req, res) => {
+  try {
+    let {scheduledTime} = req.body;
 
+    scheduledTime = new Date(scheduledTime);
+    
+    if (!scheduledTime) {
+      console.log("Not schdeuled");
+      sendMessage(req, res);
+    } else {
+      console.log("schedule");
+      const currentTime = new Date();
+      const timeDifference = scheduledTime - currentTime;
+      if (timeDifference > 0) {
+        console.log("Scheduled");
+        setTimeout(async () => {
+          await sendMessage(req, res);
+        }, timeDifference);
+      } else {
+        throw new Error("invalid time")
+       
+      }
+    }
+  } catch (error) {
+    res.status(500).json({ error: "something went Wrong" });
+  }
+};
 //@description     Create New Message
 //@route           POST /api/Message/
 //@access          Protected
@@ -54,4 +81,4 @@ const sendMessage = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { allMessages, sendMessage };
+module.exports = { allMessages, sendMessage, handleMessages };

@@ -2,19 +2,21 @@ import { FormControl } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
-import { IconButton, Spinner, useToast } from "@chakra-ui/react";
+import { Icon, IconButton, Spinner, useToast } from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
 import Lottie from "react-lottie";
 import animationData from "../animations/typing.json";
-
+import { IoMdClock } from "react-icons/io";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
+import ScheduleFormContext from "../Context/SchedulemessageForm";
+import ScheduleMessageform from "./ScheduleMessageform";
 const ENDPOINT = "http://localhost:5000"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
@@ -25,6 +27,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
+  const Formcontext = useContext(ScheduleFormContext);
+  const {ScheduleFormVis,setScheduleFormVis} = Formcontext;
+  
   const toast = useToast();
 
   const defaultOptions = {
@@ -71,7 +76,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
+    if (event.key == "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
@@ -89,6 +94,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
+        console.log("selectedChat",selectedChat);
         socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {
@@ -103,7 +109,36 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     }
   };
-
+  const sendMessagebtn = async () => {
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      setNewMessage("");
+      const { data } = await axios.post(
+        "/api/message",
+        {
+          content: newMessage,
+          chatId: selectedChat,
+        },
+        config
+      );
+      socket.emit("new message", data);
+      setMessages([...messages, data]);
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: "Failed to send the Message",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  };
   useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
@@ -157,7 +192,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     }, timerLength);
   };
-
+  const handleScehduleButton = ()=>{
+    setScheduleFormVis(true);
+  }
   return (
     <>
       {selectedChat ? (
@@ -226,6 +263,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               id="first-name"
               isRequired
               mt={3}
+              d="flex"
             >
               {istyping ? (
                 <div>
@@ -239,6 +277,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ) : (
                 <></>
               )}
+
               <Input
                 variant="filled"
                 bg="#E0E0E0"
@@ -246,7 +285,26 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 value={newMessage}
                 onChange={typingHandler}
               />
+              <Icon
+              cursor="pointer"
+              onClick={handleScehduleButton}
+                as={IoMdClock}
+                height="5vh"
+                width="5vh"
+                color="green"
+                border="2px solid black"
+                borderRadius="100%"
+                backgroundColor="white"
+                marginLeft="2vh"
+                marginRight="2vh"
+              />
+              <div className="sendMessage" onClick={sendMessagebtn}>
+                <ArrowRightIcon />
+              </div>
             </FormControl>
+            {
+            ScheduleFormVis&&<ScheduleMessageform socket={socket} messages={messages} setMessages={setMessages} />
+            }
           </Box>
         </>
       ) : (

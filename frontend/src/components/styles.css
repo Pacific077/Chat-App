@@ -4,3 +4,20 @@
   overflow-y: scroll;
   scrollbar-width: none;
 }
+.sendMessage{
+  box-sizing: border-box;
+  border-radius: 100%;
+  box-shadow: 4px 4px 4px gray;
+  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: green;
+  color: white;
+  height: 5vh;
+  width: 5vh;
+  border: 2px solid black;
+}
+.sendMessage:hover{
+  cursor:pointer;
+}
