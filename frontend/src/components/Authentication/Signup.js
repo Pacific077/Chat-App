@@ -130,11 +130,12 @@ const Signup = () => {
   };
 
   return (
-    <VStack spacing="5px">
+    <VStack spacing="5px" color="white" >
       <FormControl id="first-name" isRequired>
         <FormLabel>Name</FormLabel>
         <Input
           placeholder="Enter Your Name"
+          focusBorderColor="gray.400"
           onChange={(e) => setName(e.target.value)}
         />
       </FormControl>
@@ -142,6 +143,7 @@ const Signup = () => {
         <FormLabel>Email Address</FormLabel>
         <Input
           type="email"
+          focusBorderColor="gray.400"
           placeholder="Enter Your Email Address"
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -149,13 +151,14 @@ const Signup = () => {
       <FormControl id="password" isRequired>
         <FormLabel>Password</FormLabel>
         <InputGroup size="md">
-          <Input
+          <Input 
             type={show ? "text" : "password"}
             placeholder="Enter Password"
+            focusBorderColor="gray.400"
             onChange={(e) => setPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
+            <Button h="1.75rem" size="sm" bg="gray.700" _hover={{bg:"gray.700"}} _focus="none" onClick={handleClick}>
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
@@ -167,10 +170,11 @@ const Signup = () => {
           <Input
             type={show ? "text" : "password"}
             placeholder="Confirm password"
+            focusBorderColor="gray.400"
             onChange={(e) => setConfirmpassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
+            <Button h="1.75rem" size="sm" bg="gray.700" _hover={{bg:"gray.700"}} _focus="none" onClick={handleClick}>
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
@@ -182,15 +186,20 @@ const Signup = () => {
           type="file"
           p={1.5}
           accept="image/*"
+          focusBorderColor="gray.400"
           onChange={(e) => postDetails(e.target.files[0])}
         />
       </FormControl>
       <Button
-        colorScheme="blue"
+        // colorScheme="gray"
+        bg="gray.500"
+        _hover={{bg:"gray.400"}}
+        _focus="none"
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
         isLoading={picLoading}
+        focusBorderColor="gray.400"
       >
         Sign Up
       </Button>

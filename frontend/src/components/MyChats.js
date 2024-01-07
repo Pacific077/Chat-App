@@ -46,12 +46,12 @@ const MyChats = ({ fetchAgain }) => {
   }, [fetchAgain]);
 
   return (
-    <Box
+    <Box className="mychatdiv"
       d={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"
       p={3}
-      bg="white"
+      // bg="red"
       w={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
@@ -65,6 +65,7 @@ const MyChats = ({ fetchAgain }) => {
         w="100%"
         justifyContent="space-between"
         alignItems="center"
+        color="white"
       >
         My Chats
         <GroupChatModal>
@@ -72,6 +73,7 @@ const MyChats = ({ fetchAgain }) => {
             d="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
             rightIcon={<AddIcon />}
+            color="blue"
           >
             New Group Chat
           </Button>
@@ -81,7 +83,8 @@ const MyChats = ({ fetchAgain }) => {
         d="flex"
         flexDir="column"
         p={3}
-        bg="#F8F8F8"
+        // bg="#F8F8F8"
+        className="innerMychat"
         w="100%"
         h="100%"
         borderRadius="lg"
