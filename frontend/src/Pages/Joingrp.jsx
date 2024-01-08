@@ -1,10 +1,12 @@
-import { Box, Text, Button, toast } from "@chakra-ui/react";
+import { Box, Text, Button, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import React from "react";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams,useHistory  } from "react-router-dom/cjs/react-router-dom.min";
 import { ChatState } from "../Context/ChatProvider";
 
 const Joingrp = () => {
+  const toast = useToast();
+  const history = useHistory();
     const {chatId,userId}  = useParams()
     const { user } = ChatState();
     const handleJoingrp =async ()=>{
@@ -21,15 +23,25 @@ const Joingrp = () => {
             {},
             config
           );
-          
           console.log("resp",resp);
+          if(resp.status===200){
+            toast({
+              title: "Added",
+              description: "You were added to grp",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+              position: "bottom",
+            });
+          }
+          
           // setSelectedChat(data);
           // setFetchAgain(!fetchAgain);
           // setLoading(false);
         } catch (error) { 
           toast({
-            title: "Error Occured!",
-            description: error.response.data.message,
+            title: "Error",
+            description: "Something went wrong",
             status: "error",
             duration: 5000,
             isClosable: true,
@@ -37,7 +49,7 @@ const Joingrp = () => {
           });
           // setLoading(false);
         }
-
+        history.push('/');
     }
   return (
     <Box

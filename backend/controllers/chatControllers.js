@@ -74,6 +74,46 @@ const fetchChats = asyncHandler(async (req, res) => {
   }
 });
 
+const sendMailtoAll = async(req,res)=>{
+  var users = JSON.parse(req.body.users);
+  console.log("useres in mail",users);
+  // const user = await User.findById(users[0]);
+  // console.log("Seatced user",user);
+  var emailList = [];
+  await Promise.all(users.map(async (u) => {
+    var user = await User.findById(u);
+    emailList.push(user.email);
+  }));
+  // console.log("list",emailList);
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'rahmanfaisal516@gmail.com',
+      pass: 'qzkj ckef wuhu egyc'
+    }
+  })
+  
+  console.log("emaillist",emailList);
+  await Promise.all(emailList.map(async (email, ind) => {
+    var mailOptions = {
+      from: 'rahmanfaisal516@gmail.com',
+      to: email,
+      subject: 'Request to join the group',
+      text: `You were requested to join the group, if you want to join the group please
+      click on the link http://localhost:3000/joingrp/${req.chatId}/${users[ind]}`
+    };
+  
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email sent:', info.response);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }));
+ console.log("reached the end of send mail")
+
+}
+
 //@description     Create New Group Chat
 //@route           POST /api/chat/group
 //@access          Protected
@@ -90,16 +130,18 @@ const createGroupChat = asyncHandler(async (req, res) => {
       .send("More than 2 users are required to form a group chat");
   }
 
-  users.push(req.user);
+  // users.push(req.user);
 
   try {
     const groupChat = await Chat.create({
       chatName: req.body.name,
-      users: users,
+      users: req.user,
       isGroupChat: true,
       groupAdmin: req.user,
     });
-
+    req.chatId =await groupChat._id;
+    await sendMailtoAll(req,res);
+    console.log("after sending mail")
     const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
       .populate("users", "-password")
       .populate("groupAdmin", "-password");
@@ -234,5 +276,5 @@ module.exports = {
   renameGroup,
   addToGroup,
   removeFromGroup,
-  sendMailReq
+  sendMailReq,sendMailtoAll
 };
