@@ -12,6 +12,7 @@ import {
   Input,
   useToast,
   Box,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
@@ -79,6 +80,7 @@ const GroupChatModal = ({ children }) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     if (!groupChatName || !selectedUsers) {
       toast({
         title: "Please fill all the feilds",
@@ -123,6 +125,7 @@ const GroupChatModal = ({ children }) => {
         position: "bottom",
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -140,6 +143,16 @@ const GroupChatModal = ({ children }) => {
           >
             Create Group Chat
           </ModalHeader>
+          {loading&&
+            <Spinner
+            margin="auto"
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          }
           <ModalCloseButton />
           <ModalBody d="flex" flexDir="column" alignItems="center">
             <FormControl>
@@ -167,7 +180,7 @@ const GroupChatModal = ({ children }) => {
             </Box>
             {loading ? (
               // <ChatLoading />
-              <div>Loading...</div>
+              <div>Adding...</div>
             ) : (
               searchResult
                 ?.slice(0, 4)
