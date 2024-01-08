@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
-
+const nodemailer = require("nodemailer");
 //@description     Create or fetch One to One Chat
 //@route           POST /api/chat/
 //@access          Protected
@@ -168,8 +168,42 @@ const removeFromGroup = asyncHandler(async (req, res) => {
 // @desc    Add user to Group / Leave
 // @route   PUT /api/chat/groupadd
 // @access  Protected
+const sendMailReq = async(req,res,next)=>{
+  console.log("sending mail enetered")
+  const { chatId, userId } = req.params;
+  const user = await User.findById(userId);
+  console.log("email user",user)
+  const email = user.email;
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'rahmanfaisal516@gmail.com',
+      pass: 'qzkj ckef wuhu egyc'
+    }
+  })
+  var mailOptions = {
+    from: 'rahmanfaisal516@gmail.com',
+    to: email,
+    subject: 'Request to join the group',
+    text: `You were requested to join the group,if you want to join the group please
+    click on the link http://localhost:3000/joingrp/${chatId}/${userId}`
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+        // res.send(transporter.id);
+      console.log('Email sent: ' + info.response);
+    }
+  });
+  res.status(200).json({
+    msg:"mail sent to user"
+  })
+}
 const addToGroup = asyncHandler(async (req, res) => {
-  const { chatId, userId } = req.body;
+  console.log("sending to grp");
+  const { chatId, userId } = req.params;
 
   // check if the requester is admin
 
@@ -200,4 +234,5 @@ module.exports = {
   renameGroup,
   addToGroup,
   removeFromGroup,
+  sendMailReq
 };

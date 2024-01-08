@@ -131,17 +131,24 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.put(
-        `/api/chat/groupadd`,
-        {
-          chatId: selectedChat._id,
-          userId: user1._id,
-        },
+      const resp = await axios.put(
+        `/api/chat/sendmail/${selectedChat._id}/${user1._id}`,
+        {},
         config
       );
-
-      setSelectedChat(data);
-      setFetchAgain(!fetchAgain);
+      if(resp.status===200){
+        toast({
+          title: "Mail sent",
+          description: "Request for grp join sent to user",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        })
+      }
+      console.log("resp",resp);
+      // setSelectedChat(data);
+      // setFetchAgain(!fetchAgain);
       setLoading(false);
     } catch (error) {
       toast({

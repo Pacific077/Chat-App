@@ -21,14 +21,14 @@ const allMessages = asyncHandler(async (req, res) => {
 const handleMessages = async (req, res) => {
   try {
     let {scheduledTime} = req.body;
-
-    scheduledTime = new Date(scheduledTime);
+    console.log("schedu",scheduledTime);
     
     if (!scheduledTime) {
       console.log("Not schdeuled");
       sendMessage(req, res);
     } else {
-      console.log("schedule");
+      scheduledTime = new Date(scheduledTime);
+      // console.log("schedule");
       const currentTime = new Date();
       const timeDifference = scheduledTime - currentTime;
       if (timeDifference > 0) {

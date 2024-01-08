@@ -4,7 +4,7 @@ import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
 import { Icon, IconButton, Spinner, useToast } from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { ArrowBackIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import ProfileModal from "./miscellaneous/ProfileModal";
@@ -17,6 +17,10 @@ import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
 import ScheduleFormContext from "../Context/SchedulemessageForm";
 import ScheduleMessageform from "./ScheduleMessageform";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+
+
 const ENDPOINT = "http://localhost:5000"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
@@ -29,6 +33,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [istyping, setIsTyping] = useState(false);
   const Formcontext = useContext(ScheduleFormContext);
   const {ScheduleFormVis,setScheduleFormVis} = Formcontext;
+  const [showEmoticonTray, setShowEmoticonTray] = useState(false);
   
   const toast = useToast();
 
@@ -195,6 +200,32 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const handleScehduleButton = ()=>{
     setScheduleFormVis(true);
   }
+
+  ///////emoji////////
+  const handleEmoticonClick = () => {
+    setShowEmoticonTray(!showEmoticonTray);
+  };
+
+  const handleEmoticonSelect = (emoji) => {
+    setNewMessage((prevMessage) => prevMessage + emoji.native);
+  };
+
+  const pickerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (pickerRef.current && !pickerRef.current.contains(event.target)) {
+        setShowEmoticonTray(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  },[pickerRef]);
+
   return (
     <>
       {selectedChat ? (
@@ -288,7 +319,21 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ) : (
                 <></>
               )}
+              <div ref={pickerRef} style={{ display: 'flex', alignItems:'center',position: 'relative' }}>
+                <button className="emoji-tray" onClick={handleEmoticonClick}>
+                  😊
+                </button>
 
+                {showEmoticonTray && (
+                  <div style={{ 
+                    position: 'absolute', 
+                    bottom: '50px'
+                  }}>
+                    <Picker data={data} preview="none" onEmojiSelect={handleEmoticonSelect} />
+                  </div>
+                )}
+
+              </div>
               <Input
                 variant="filled"
                 bg="#E0E0E0"
