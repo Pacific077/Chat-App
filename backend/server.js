@@ -23,19 +23,12 @@ app.use("/api/message", messageRoutes);
 
 // --------------------------deployment------------------------------
 
-const __dirname1 = path.resolve();
+// console.log("dirname",path.join((__dirname, '..', 'frontend/build/index.html')))
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1, "/frontend/build")));
-
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running..");
-  });
-}
+app.get('*',(req,res)=>{
+  res.sendFile(path.join((__dirname, '..', 'frontend/build/index.html')))
+})
 
 // --------------------------deployment------------------------------
 
